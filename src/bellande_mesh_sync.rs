@@ -38,5 +38,5 @@ pub async fn init(config: Config) -> Result<BellandeMeshSync, BellandeMeshError>
 /// Start the BellandeMeshSync System
 /// This function takes a BellandeMeshSync instance and starts the mesh network operations.
 pub async fn start(bellande_mesh: &BellandeMeshSync) -> Result<(), BellandeMeshError> {
-    bellande_mesh.start()
+    bellande_mesh.start().await
 }

@@ -2,6 +2,36 @@
 
 - a comprehensive data synchronization system
 
+# Features
+**Full Protocol Support:**
+- TCP/UDP handling
+- HTTP/HTTPS servers
+- TLS encryption
+- Binary message protocol
+
+**Node Management:**
+- Node discovery
+- Dead node cleanup
+- Peer synchronization
+- Data chunk handling
+
+**Message Handling:**
+- Asynchronous message processing
+- Multiple message types
+- Error handling
+- Rate limiting
+
+**Monitoring:**
+- Network statistics
+- Status reporting
+- Error logging
+- Performance metrics
+
+**Security:**
+- TLS encryption
+- Token validation
+- Node authentication
+
 ## Website Crates
 - https://crates.io/crates/bellande_mesh_sync
 

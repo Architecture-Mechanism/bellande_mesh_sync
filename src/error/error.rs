@@ -38,6 +38,7 @@ pub enum BellandeMeshError {
     NetworkError(String),
     ArrayConversionError(TryFromSliceError),
     Timeout,
+    Custom(String),
 }
 
 impl fmt::Display for BellandeMeshError {
@@ -64,6 +65,7 @@ impl fmt::Display for BellandeMeshError {
                 write!(f, "Array conversion error: {}", e)
             }
             BellandeMeshError::Timeout => write!(f, "Operation timed out"),
+            BellandeMeshError::Custom(err) => write!(f, "Custom error: {}", err),
         }
     }
 }
