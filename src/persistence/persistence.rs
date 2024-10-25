@@ -13,8 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use crate::data::data::DataChunk;
 use crate::error::error::BellandeMeshError;
-use crate::node::node::{DataChunk, Node, NodeId, PublicKey};
+use crate::node::node::{Node, NodeId, PublicKey};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::{File, OpenOptions};

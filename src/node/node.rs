@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use crate::data::data::DataChunk;
 use rand::{thread_rng, RngCore};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -29,6 +30,10 @@ impl NodeId {
         let mut id = [0u8; 32];
         thread_rng().fill_bytes(&mut id);
         NodeId(id)
+    }
+
+    pub fn to_bytes(&self) -> Vec<u8> {
+        bincode::serialize(self).unwrap_or_default()
     }
 
     pub fn from_bytes(bytes: &[u8]) -> Self {
@@ -65,29 +70,6 @@ impl PublicKey {
 
     pub fn as_bytes(&self) -> &[u8; 32] {
         &self.0
-    }
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DataChunk {
-    pub id: NodeId,
-    pub content: Vec<u8>,
-    pub timestamp: SystemTime,
-    pub author: NodeId,
-}
-
-impl DataChunk {
-    pub fn new(id: NodeId, content: Vec<u8>, author: NodeId) -> Self {
-        Self {
-            id,
-            content,
-            timestamp: SystemTime::now(),
-            author,
-        }
-    }
-
-    pub fn size(&self) -> usize {
-        std::mem::size_of::<NodeId>() * 2 + self.content.len() + std::mem::size_of::<SystemTime>()
     }
 }
 
@@ -203,7 +185,7 @@ impl Node {
             Ok(mut data) => {
                 let now = SystemTime::now();
                 data.retain(|_, chunk| {
-                    now.duration_since(chunk.timestamp)
+                    now.duration_since(chunk.last_modified)
                         .map(|age| age <= max_age)
                         .unwrap_or(false)
                 });

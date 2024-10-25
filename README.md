@@ -32,6 +32,38 @@
 - Token validation
 - Node authentication
 
+# Usage 
+```
+use bellande_mesh_sync::{init, init_with_options, start, stop, MeshOptions, Config};
+
+async fn example() -> Result<(), BellandeMeshError> {
+    // Basic initialization
+    let config = Config {
+        listen_address: "127.0.0.1:8000".to_string(),
+        node_timeout: 300,
+    };
+    let mesh = init(config.clone()).await?;
+    start(&mesh).await?;
+
+    // Or with custom options
+    let options = MeshOptions {
+        dev_mode: true,
+        metrics_interval: Some(30),
+        enable_persistence: true,
+        ..Default::default()
+    };
+    let mesh = init_with_options(config, options).await?;
+    start(&mesh).await?;
+
+    // Use other functionalities
+    broadcast(&mesh, b"Hello network!".to_vec()).await?;
+    let stats = get_stats(&mesh).await?;
+    let nodes = get_nodes(&mesh).await?;
+
+    stop(&mesh).await?;
+    Ok(())
+}
+```
 ## Website Crates
 - https://crates.io/crates/bellande_mesh_sync
 

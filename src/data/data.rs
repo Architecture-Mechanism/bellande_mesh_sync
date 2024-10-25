@@ -13,18 +13,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use crate::node::node::NodeId;
 use serde::{Deserialize, Serialize};
 use std::time::SystemTime;
-use uuid::Uuid;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct DataChunk {
-    pub id: Uuid,
+    pub id: NodeId,
     pub content: Vec<u8>,
     pub checksum: String,
     pub version: u64,
     pub last_modified: SystemTime,
-    pub author: Uuid,
+    pub author: NodeId,
     pub parent_versions: Vec<u64>,
 }
 
@@ -33,17 +33,20 @@ impl DataChunk {
         content: Vec<u8>,
         checksum: String,
         version: u64,
-        author: Uuid,
+        author: NodeId,
         parent_versions: Vec<u64>,
     ) -> Self {
         Self {
-            id: Uuid::new_v4(),
+            id: NodeId::new(),
             content,
             checksum,
             version,
             last_modified: SystemTime::now(),
-            author,
+            author: NodeId::new(),
             parent_versions,
         }
+    }
+    pub fn size(&self) -> usize {
+        std::mem::size_of::<NodeId>() * 2 + self.content.len() + std::mem::size_of::<SystemTime>()
     }
 }
