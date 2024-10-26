@@ -66,3 +66,6 @@ Please reach out to the project maintainers or consult the architecture document
 - Last Updated: October 26, 2024
 
 This Code of Conduct is a living document and may be updated to better serve the project's needs while maintaining its core principle of architectural naming consistency.
+
+## Organization Code of Conduct
+The latest uptodate Code of Conduct will be distributed under the [CODE_OF_CONDUCT](https://github.com/Architecture-Mechanism/bellande_mesh_sync/blob/main/CODE_OF_CONDUCT.md) 
