@@ -51,6 +51,24 @@ pub struct MeshOptions {
     pub enable_persistence: bool,
     /// Custom persistence directory
     pub persistence_path: Option<PathBuf>,
+    /// Node timeout duration in seconds
+    pub node_timeout: Option<u64>,
+    /// Enable automatic node discovery
+    pub enable_discovery: bool,
+    /// Bootstrap nodes for initial connection
+    pub bootstrap_nodes: Vec<String>,
+    /// Enable encryption for all communications
+    pub enable_encryption: bool,
+    /// Custom TCP port for mesh communication
+    pub tcp_port: Option<u16>,
+    /// Custom UDP port for mesh communication
+    pub udp_port: Option<u16>,
+    /// Maximum retry attempts for failed connections
+    pub max_retries: Option<u32>,
+    /// Enable automatic data replication
+    pub enable_replication: bool,
+    /// Number of data replicas to maintain
+    pub replication_factor: Option<u32>,
 }
 
 impl Default for MeshOptions {
@@ -63,6 +81,15 @@ impl Default for MeshOptions {
             max_connections: Some(1000),
             enable_persistence: false,
             persistence_path: None,
+            node_timeout: Some(300),
+            enable_discovery: true,
+            bootstrap_nodes: Vec::new(),
+            enable_encryption: true,
+            tcp_port: None,
+            udp_port: None,
+            max_retries: Some(3),
+            enable_replication: true,
+            replication_factor: Some(3),
         }
     }
 }
@@ -109,13 +136,34 @@ pub async fn init_with_options(
 
     // Restore persisted data if available
     if let Some(persistence) = &persistence_manager {
-        let nodes = persistence.load_nodes()?;
-        bellande_mesh.restore_nodes(nodes).await?;
+        // Load nodes from persistence
+        let nodes = persistence
+            .load_nodes()
+            .map_err(|e| BellandeMeshError::Custom(format!("Failed to load nodes: {}", e)))?;
 
-        // Load data chunks for each node
+        // Restore the nodes structure
+        bellande_mesh
+            .restore_nodes(nodes.clone())
+            .await
+            .map_err(|e| BellandeMeshError::Custom(format!("Failed to restore nodes: {}", e)))?;
+
+        // Then load and restore data chunks for each node
         for node in nodes {
-            let chunks = persistence.load_data_chunks(&node.id)?;
-            bellande_mesh.restore_data_chunks(node.id, chunks).await?;
+            match persistence.load_data_chunks(&node.id) {
+                Ok(chunks) => {
+                    if let Err(e) = bellande_mesh.restore_data_chunks(node.id, chunks).await {
+                        eprintln!(
+                            "Error restoring chunks for node {}: {}",
+                            node.id.to_hex(),
+                            e
+                        );
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Error loading chunks for node {}: {}", node.id.to_hex(), e);
+                    continue;
+                }
+            }
         }
     }
 
@@ -142,7 +190,7 @@ pub async fn stop(bellande_mesh: &BellandeMeshSync) -> Result<(), BellandeMeshEr
     bellande_mesh.stop().await
 }
 
-/// Broadcast a message to all nodes in the network
+// Message and Data Handling
 pub async fn broadcast(
     bellande_mesh: &BellandeMeshSync,
     data: Vec<u8>,
@@ -150,19 +198,33 @@ pub async fn broadcast(
     bellande_mesh.broadcast_data(data).await
 }
 
-/// Get the current network statistics
-pub async fn get_stats(
+pub async fn send_to_node(
     bellande_mesh: &BellandeMeshSync,
-) -> Result<NetworkStats, BellandeMeshError> {
-    bellande_mesh.get_network_stats().await
+    node_id: NodeId,
+    data: Vec<u8>,
+) -> Result<(), BellandeMeshError> {
+    bellande_mesh.send_data_to_node(node_id, data).await
 }
 
-/// Get the list of currently connected nodes
+// Node Management
 pub async fn get_nodes(bellande_mesh: &BellandeMeshSync) -> Result<Vec<Node>, BellandeMeshError> {
     bellande_mesh.get_all_nodes().await
 }
 
-/// Check if a specific node is connected to the network
+pub async fn get_active_nodes(
+    bellande_mesh: &BellandeMeshSync,
+) -> Result<Vec<Node>, BellandeMeshError> {
+    bellande_mesh.get_all_active_nodes().await
+}
+
+pub async fn get_nodes_paginated(
+    bellande_mesh: &BellandeMeshSync,
+    offset: usize,
+    limit: usize,
+) -> Result<(Vec<Node>, usize), BellandeMeshError> {
+    bellande_mesh.get_nodes_paginated(offset, limit).await
+}
+
 pub async fn is_node_connected(
     bellande_mesh: &BellandeMeshSync,
     node_id: NodeId,
@@ -170,11 +232,82 @@ pub async fn is_node_connected(
     bellande_mesh.is_node_connected(&node_id).await
 }
 
-/// Send a message to a specific node
-pub async fn send_to_node(
+pub async fn restore_nodes(
     bellande_mesh: &BellandeMeshSync,
-    node_id: NodeId,
+    nodes: Vec<Node>,
+) -> Result<(), BellandeMeshError> {
+    bellande_mesh.restore_nodes(nodes).await
+}
+
+// Network Statistics and Monitoring
+pub async fn get_stats(
+    bellande_mesh: &BellandeMeshSync,
+) -> Result<NetworkStats, BellandeMeshError> {
+    bellande_mesh.get_network_stats().await
+}
+
+pub async fn get_node_count(bellande_mesh: &BellandeMeshSync) -> Result<usize, BellandeMeshError> {
+    bellande_mesh.get_node_count().await
+}
+
+pub async fn get_node_list(
+    bellande_mesh: &BellandeMeshSync,
+) -> Result<Vec<NodeId>, BellandeMeshError> {
+    bellande_mesh.get_node_list().await
+}
+
+// Maintenance Operations
+pub async fn start_metrics_collection(
+    bellande_mesh: &BellandeMeshSync,
+    interval: u64,
+) -> Result<(), BellandeMeshError> {
+    bellande_mesh.start_metrics_collection(interval).await
+}
+
+pub async fn set_max_connections(
+    bellande_mesh: &BellandeMeshSync,
+    max_conn: usize,
+) -> Result<(), BellandeMeshError> {
+    bellande_mesh.set_max_connections(max_conn).await
+}
+
+pub async fn cleanup_dead_nodes(bellande_mesh: &BellandeMeshSync) -> Result<(), BellandeMeshError> {
+    bellande_mesh.cleanup_dead_nodes().await
+}
+
+// Node Discovery and Communication
+pub async fn find_closest_nodes(
+    bellande_mesh: &BellandeMeshSync,
+    target: &NodeId,
+    count: usize,
+) -> Result<Vec<Node>, BellandeMeshError> {
+    Ok(bellande_mesh.find_closest_nodes(target, count).await)
+}
+
+pub async fn broadcast_new_node(
+    bellande_mesh: &BellandeMeshSync,
+    new_node: &Node,
+) -> Result<(), BellandeMeshError> {
+    bellande_mesh.broadcast_new_node(new_node).await
+}
+
+// Protocol Functions
+pub async fn handle_join_request(
+    bellande_mesh: &BellandeMeshSync,
     data: Vec<u8>,
 ) -> Result<(), BellandeMeshError> {
-    bellande_mesh.send_data_to_node(node_id, data).await
+    bellande_mesh.handle_join_request(data).await
+}
+
+// Utility Functions
+pub async fn get_local_id(bellande_mesh: &BellandeMeshSync) -> Result<NodeId, BellandeMeshError> {
+    bellande_mesh.get_local_id().await
+}
+
+pub async fn get_status(bellande_mesh: &BellandeMeshSync) -> String {
+    bellande_mesh.get_status().await
+}
+
+pub async fn is_running(bellande_mesh: &BellandeMeshSync) -> Result<bool, BellandeMeshError> {
+    bellande_mesh.is_running().await
 }

@@ -119,52 +119,120 @@ impl PersistenceManager {
         Ok(nodes)
     }
 
+    pub fn load_data_chunks(&self, node_id: &NodeId) -> Result<Vec<DataChunk>, BellandeMeshError> {
+        let chunks_dir = self.data_dir.join("data_chunks").join(node_id.to_hex());
+
+        if !chunks_dir.exists() {
+            return Ok(Vec::new());
+        }
+
+        let mut chunks = Vec::new();
+
+        const SUPPORTED_EXTENSIONS: [&str; 2] = ["bellande", "dat"];
+
+        for entry in std::fs::read_dir(chunks_dir)? {
+            let entry = entry?;
+            let path = entry.path();
+
+            if let Some(extension) = path.extension().and_then(|s| s.to_str()) {
+                if SUPPORTED_EXTENSIONS.contains(&extension) {
+                    match self.read_chunk_file(&path) {
+                        Ok(chunk) => chunks.push(chunk),
+                        Err(e) => {
+                            eprintln!("Error reading chunk file {:?}: {}", path, e);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        chunks.sort_by(|a, b| a.id.cmp(&b.id));
+
+        Ok(chunks)
+    }
+
+    fn read_chunk_file(&self, path: &Path) -> Result<DataChunk, BellandeMeshError> {
+        let file = self.get_connection(path)?;
+        let reader = BufReader::new(file);
+
+        let extension = path
+            .extension()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| BellandeMeshError::Custom("Invalid file extension".to_string()))?;
+
+        match extension {
+            "bellande" => bincode::deserialize_from(reader).map_err(|e| {
+                BellandeMeshError::Deserialization(format!(
+                    "Failed to deserialize .bellande file: {}",
+                    e
+                ))
+            }),
+            "dat" => bincode::deserialize_from(reader).map_err(|e| {
+                BellandeMeshError::Deserialization(format!(
+                    "Failed to deserialize .dat file: {}",
+                    e
+                ))
+            }),
+            _ => Err(BellandeMeshError::Custom(
+                "Unsupported file extension".to_string(),
+            )),
+        }
+    }
+
     pub fn save_data_chunk(
         &self,
         node_id: &NodeId,
         chunk: &DataChunk,
+        use_bellande: bool,
     ) -> Result<(), BellandeMeshError> {
-        let path = self
-            .data_dir
-            .join("data_chunks")
-            .join(node_id.to_hex())
-            .join(format!("{}.dat", chunk.id.to_hex()));
+        let chunks_dir = self.data_dir.join("data_chunks").join(node_id.to_hex());
+        std::fs::create_dir_all(&chunks_dir)?;
 
-        std::fs::create_dir_all(path.parent().unwrap())?;
+        let extension = if use_bellande { "bellande" } else { "dat" };
+        let file_name = format!("{}.{}", chunk.id.to_hex(), extension);
+        let path = chunks_dir.join(file_name);
+
         let file = self.get_connection(&path)?;
-        let writer = BufWriter::new(file);
-
-        bincode::serialize_into(writer, chunk)
+        bincode::serialize_into(file, chunk)
             .map_err(|e| BellandeMeshError::Serialization(e.to_string()))?;
 
         Ok(())
     }
 
-    pub fn load_data_chunks(
+    pub async fn migrate_chunk_format(
         &self,
         node_id: &NodeId,
-    ) -> Result<HashMap<NodeId, DataChunk>, BellandeMeshError> {
+        to_bellande: bool,
+    ) -> Result<(), BellandeMeshError> {
+        let chunks = self.load_data_chunks(node_id)?;
+
         let chunks_dir = self.data_dir.join("data_chunks").join(node_id.to_hex());
+        let temp_dir = chunks_dir.with_extension("temp");
+        std::fs::create_dir_all(&temp_dir)?;
 
-        if !chunks_dir.exists() {
-            return Ok(HashMap::new());
+        for chunk in &chunks {
+            let extension = if to_bellande { "bellande" } else { "dat" };
+            let file_name = format!("{}.{}", chunk.id.to_hex(), extension);
+            let path = temp_dir.join(file_name);
+
+            let file = self.get_connection(&path)?;
+            bincode::serialize_into(file, chunk)
+                .map_err(|e| BellandeMeshError::Serialization(e.to_string()))?;
         }
 
-        let mut chunks = HashMap::new();
-        for entry in std::fs::read_dir(chunks_dir)? {
-            let entry = entry?;
-            let path = entry.path();
-            if path.extension().and_then(|s| s.to_str()) == Some("dat") {
-                let file = self.get_connection(&path)?;
-                let reader = BufReader::new(file);
-
-                let chunk: DataChunk = bincode::deserialize_from(reader)
-                    .map_err(|e| BellandeMeshError::Deserialization(e.to_string()))?;
-                chunks.insert(chunk.id, chunk);
-            }
+        let backup_dir = chunks_dir.with_extension("backup");
+        if chunks_dir.exists() {
+            std::fs::rename(&chunks_dir, &backup_dir)?;
         }
 
-        Ok(chunks)
+        std::fs::rename(&temp_dir, &chunks_dir)?;
+
+        if backup_dir.exists() {
+            std::fs::remove_dir_all(backup_dir)?;
+        }
+
+        Ok(())
     }
 
     fn get_connection(&self, path: &Path) -> Result<File, BellandeMeshError> {

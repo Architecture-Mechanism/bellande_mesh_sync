@@ -8,7 +8,7 @@ license = "GPL-3.0-or-later"
 repository = "https://github.com/Architecture-Mechanism/bellande_mesh_sync"
 documentation = "https://bellande-architecture-mechanism-research-innovation-center.org/bellande_mesh_sync/docs"
 readme = "README.md"
-keywords = ["p2p", "synchronization", "distributed-systems", "mesh-network", "bellande_mesh_sync"]
+keywords = ["synchronization", "distributed-systems", "mesh-network", "bellande_mesh_sync"]
 categories = ["network-programming", "asynchronous"]
 
 [lib]
@@ -29,3 +29,4 @@ chrono = { version = "0.4", features = ["serde"] }
 sled = "0.34"
 tokio-util = { version = "0.7", features = ["full"] }
 async-trait = "0.1"
+tokio-rustls = "0.24"
