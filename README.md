@@ -1,4 +1,4 @@
-# Bellande Mesh Sync
+# Bellande Mesh Sync {BMS}
 
 ## Core Features or To Be Implemented
 
