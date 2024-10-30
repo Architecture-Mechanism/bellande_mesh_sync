@@ -23,7 +23,7 @@
 
 ### Node Management
 - Discovery
-- Automatic peer finding
+- Automatic node finding
 - Bootstrap nodes
 - Node registration
 - Network topology
@@ -35,7 +35,7 @@
 - Connection monitoring
   
 - Data Synchronization
-- Peer sync protocols
+- Node sync protocols
 - Data chunk transfer
 - State reconciliation
 - Conflict resolution

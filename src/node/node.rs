@@ -19,8 +19,9 @@ use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 use std::time::{Duration, SystemTime};
+use tokio::sync::RwLock;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct NodeId([u8; 32]);
@@ -167,32 +168,34 @@ impl Node {
     }
 
     pub fn add_data_chunk(&self, chunk: DataChunk) -> bool {
-        match self.data.write() {
-            Ok(mut data) => {
-                data.insert(chunk.id, chunk);
-                true
-            }
-            Err(_) => false,
-        }
+        let data = self.data.clone();
+        tokio::runtime::Handle::current().block_on(async move {
+            let mut guard = data.write().await;
+            guard.insert(chunk.id, chunk);
+            true
+        })
     }
 
     pub fn get_data_chunk(&self, id: &NodeId) -> Option<DataChunk> {
-        self.data.read().ok()?.get(id).cloned()
+        let data = self.data.clone();
+        tokio::runtime::Handle::current().block_on(async move {
+            let guard = data.read().await;
+            guard.get(id).cloned()
+        })
     }
 
     pub fn remove_old_data(&self, max_age: Duration) -> bool {
-        match self.data.write() {
-            Ok(mut data) => {
-                let now = SystemTime::now();
-                data.retain(|_, chunk| {
-                    now.duration_since(chunk.last_modified)
-                        .map(|age| age <= max_age)
-                        .unwrap_or(false)
-                });
-                true
-            }
-            Err(_) => false,
-        }
+        let data = self.data.clone();
+        tokio::runtime::Handle::current().block_on(async move {
+            let mut guard = data.write().await;
+            let now = SystemTime::now();
+            guard.retain(|_, chunk| {
+                now.duration_since(chunk.last_modified)
+                    .map(|age| age <= max_age)
+                    .unwrap_or(false)
+            });
+            true
+        })
     }
 
     pub fn is_alive(&self, timeout: Duration) -> bool {

@@ -29,7 +29,7 @@ mod persistence;
 pub use crate::config::config::Config;
 pub use crate::error::error::BellandeMeshError;
 pub use crate::mesh::mesh::BellandeMeshSync;
-use crate::mesh::mesh::NetworkStats;
+pub use crate::mesh::mesh::NetworkStats;
 pub use crate::metrics::metrics::MetricsManager;
 pub use crate::node::node::{Node, NodeId, PublicKey};
 pub use crate::persistence::persistence::PersistenceManager;
