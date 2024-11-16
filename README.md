@@ -5,8 +5,11 @@
 ## Bellande Node Calculations
 - https://github.com/Robotics-Sensors/bellande_step
 
-## Bellande Node Algorithm
--
+## Bellande Propabilistic used in Bellande Search Path
+- https://github.com/Robotics-Sensors/bellande_probabilistic
+
+## Bellande Search Path 
+- https://github.com/Robotics-Sensors/bellande_search_path_api
 
 ### Protocol Support
 - TCP/UDP Communication
