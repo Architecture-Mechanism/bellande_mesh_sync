@@ -18,9 +18,9 @@
 - https://git.bellande-technologies.com/BRSRI/bellande_particles
 - https://github.com/Robotics-Sensors/bellande_particles
 
-## Bellande Propabilistic Calculations
-- https://git.bellande-technologies.com/BRSRI/bellande_probabilistic
-- https://github.com/Robotics-Sensors/bellande_probabilistic
+## Bellande Probability Calculations
+- https://git.bellande-technologies.com/BRSRI/bellande_probability
+- https://github.com/Robotics-Sensors/bellande_probability
 
 ## Bellande Search Path Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_search_path
