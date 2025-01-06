@@ -15,12 +15,20 @@
 - https://github.com/Robotics-Sensors/bellande_node_importance
 
 ## Bellande Particles Calculations
-- https://git.bellande-technologies.com/BRSRI/bellande_particles
-- https://github.com/Robotics-Sensors/bellande_particles
+- https://git.bellande-technologies.com/BRSRI/bellande_particle
+- https://github.com/Robotics-Sensors/bellande_particle
 
 ## Bellande Probability Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_probability
 - https://github.com/Robotics-Sensors/bellande_probability
+
+## Bellande Tree Calculations
+- https://git.bellande-technologies.com/BRSRI/bellande_tree
+- https://github.com/Robotics-Sensors/bellande_tree
+
+## Bellande Segment Calculations
+- https://git.bellande-technologies.com/BRSRI/bellande_segment
+- https://github.com/Robotics-Sensors/bellande_segment
 
 ## Bellande Search Path Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_search_path
