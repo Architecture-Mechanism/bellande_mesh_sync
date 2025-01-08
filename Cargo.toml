@@ -3,7 +3,7 @@ name = "bellande_mesh_sync"
 version = "0.0.2"
 edition = "2021"
 authors = ["Ronaldson Bellande <ronaldsonbellande@gmail.com>"]
-description = "Advanced peer-to-peer data synchronization system for distributed applications"
+description = "Advanced data synchronization system for distributed applications with algorithmic architecture"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/Architecture-Mechanism/bellande_mesh_sync"
 documentation = "https://bellande-architecture-mechanism-research-innovation-center.org/bellande_mesh_sync/docs"
@@ -26,3 +26,10 @@ rustls = "0.21"
 tokio-util = { version = "0.7", features = ["full"] }
 async-trait = "0.1"
 tokio-rustls = "0.24"
+
+# Bellande Architecture
+bellande_step = "0.1.0"
+bellande_limit = "0.1.0"
+bellande_node_importance = "0.1.0"
+bellande_particle = "0.1.1"
+bellande_probability = "0.1.1"
