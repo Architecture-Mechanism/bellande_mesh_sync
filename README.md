@@ -4,47 +4,50 @@
 - https://git.bellande-technologies.com/BRSRI/bellande_search_path_api
 - https://github.com/Robotics-Sensors/bellande_search_path_api
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_search_path_api
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_search_path_api
 
-# Core Features or To Be Implemented
+# Core Features or To Be Implemented To get the same results as Bellande Search Path API
 ## Bellande Step Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_step
 - https://github.com/Robotics-Sensors/bellande_step
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_step
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_step
 
 ## Bellande Limit Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_limit
 - https://github.com/Robotics-Sensors/bellande_limit
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_limit
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_limit
 
 ## Bellande Node Importance Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_node_importance
 - https://github.com/Robotics-Sensors/bellande_node_importance
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_node_importance
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_node_importance
 
 ## Bellande Particles Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_particle
 - https://github.com/Robotics-Sensors/bellande_particle
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_particle
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_particle
 
 ## Bellande Probability Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_probability
 - https://github.com/Robotics-Sensors/bellande_probability
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_probability
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_probability
 
 ## Bellande Tree Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_tree
 - https://github.com/Robotics-Sensors/bellande_tree
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_tree
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_tree
 
 ## Bellande Segment Calculations
 - https://git.bellande-technologies.com/BRSRI/bellande_segment
 - https://github.com/Robotics-Sensors/bellande_segment
 - https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_segment
-
-## Bellande Search Path Calculations
-- https://git.bellande-technologies.com/BRSRI/bellande_search_path
-- https://github.com/Robotics-Sensors/bellande_search_path
-- https://gitlab.com/Bellande-Robotics-Sensors-Research-Innovation-Center/bellande_search_path
+- https://bitbucket.org/Bellande-Robotics-Sensors/bellande_segment
 
 
 ### Protocol Support
