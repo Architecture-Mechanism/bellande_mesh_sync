@@ -1,5 +1,13 @@
 # Bellande Mesh Sync {BMS}
 
+# Run Bellos Scripts
+    - build_bellande_framework.bellos
+    - make_rust_executable.bellos
+
+# Run Bash Scripts
+    - build_bellande_framework.sh
+    - make_rust_executable.sh
+
 # Bellande Search Path API
 - https://git.bellande-technologies.com/BRSRI/bellande_search_path_api
 - https://github.com/Robotics-Sensors/bellande_search_path_api

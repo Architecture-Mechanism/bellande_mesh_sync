@@ -16,15 +16,18 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 
-mod config;
-mod data;
-mod dht;
-mod encryption;
-mod error;
-mod mesh;
-mod metrics;
-mod node;
-mod persistence;
+pub mod algorithm;
+pub mod config;
+pub mod data;
+pub mod dht;
+pub mod encryption;
+pub mod error;
+pub mod mesh;
+pub mod metrics;
+pub mod node;
+pub mod persistence;
+pub mod tests;
+pub mod utilities;
 
 pub use crate::config::config::Config;
 pub use crate::error::error::BellandeMeshError;
