@@ -12,25 +12,3 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-use ed25519_dalek::PublicKey;
-use serde::{Deserialize, Serialize};
-
-impl Serialize for PublicKey {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_bytes(&self.to_bytes())
-    }
-}
-
-impl<'de> Deserialize<'de> for PublicKey {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let bytes: [u8; 32] = Deserialize::deserialize(deserializer)?;
-        PublicKey::from_bytes(&bytes).map_err(serde::de::Error::custom)
-    }
-}
