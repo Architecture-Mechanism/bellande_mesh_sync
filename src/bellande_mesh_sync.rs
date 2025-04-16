@@ -29,10 +29,11 @@ pub mod persistence;
 pub mod utilities;
 
 pub use crate::config::config::Config;
+pub use crate::encryption::encryption::PublicKey;
 pub use crate::error::error::BellandeMeshError;
 pub use crate::mesh::mesh::{BellandeMeshSync, NetworkStats};
 pub use crate::metrics::metrics::MetricsManager;
-pub use crate::node::node::{Node, NodeId, PublicKey};
+pub use crate::node::node::{Node, NodeId};
 pub use crate::persistence::persistence::PersistenceManager;
 
 /// Configuration options for initializing the BellandeMeshSync system
@@ -209,7 +210,11 @@ pub async fn send_to_node(
 
 // Node Management
 pub async fn get_nodes(bellande_mesh: &BellandeMeshSync) -> Result<Vec<Node>, BellandeMeshError> {
-    bellande_mesh.get_all_nodes().await
+    bellande_mesh.get_nodes().await
+}
+
+pub async fn get_node_port(bellande_mesh: &BellandeMeshSync) -> Result<u16, BellandeMeshError> {
+    bellande_mesh.get_node_port().await
 }
 
 pub async fn get_active_nodes(

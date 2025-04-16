@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use crate::data::data::DataChunk;
+use crate::encryption::encryption::PublicKey;
 use rand::{thread_rng, RngCore};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -58,19 +59,6 @@ impl NodeId {
 
     pub fn to_hex(&self) -> String {
         self.0.iter().map(|b| format!("{:02x}", b)).collect()
-    }
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct PublicKey([u8; 32]);
-
-impl PublicKey {
-    pub fn new(bytes: [u8; 32]) -> Self {
-        PublicKey(bytes)
-    }
-
-    pub fn as_bytes(&self) -> &[u8; 32] {
-        &self.0
     }
 }
 

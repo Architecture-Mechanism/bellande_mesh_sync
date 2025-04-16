@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
 use std::fmt;
@@ -39,7 +40,7 @@ impl fmt::Display for EncryptionError {
 
 impl Error for EncryptionError {}
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PublicKey([u8; 32]);
 
 pub struct PrivateKey([u8; 32]);
@@ -47,8 +48,12 @@ pub struct PrivateKey([u8; 32]);
 pub struct Signature([u8; 64]);
 
 impl PublicKey {
-    pub fn to_bytes(&self) -> [u8; 32] {
-        self.0
+    pub fn new(bytes: [u8; 32]) -> Self {
+        PublicKey(bytes)
+    }
+
+    pub fn as_bytes(&self) -> &[u8; 32] {
+        &self.0
     }
 }
 

@@ -13,8 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use crate::encryption::encryption::PublicKey;
 use crate::error::error::BellandeMeshError;
-use crate::node::node::{Message, Node, NodeId, PublicKey};
+use crate::node::node::{Message, Node, NodeId};
 use rand::Rng;
 use std::collections::{HashMap, HashSet};
 use std::io;

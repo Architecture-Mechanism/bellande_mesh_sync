@@ -15,9 +15,10 @@
 
 use crate::config::config::Config;
 use crate::data::data::DataChunk;
+use crate::encryption::encryption::PublicKey;
 use crate::error::error::BellandeMeshError;
 pub use crate::metrics::metrics::MetricsManager;
-use crate::node::node::{Message, Node, NodeId, PublicKey};
+use crate::node::node::{Message, Node, NodeId};
 use hyper::server::conn::AddrStream;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Client, Request, Response, Server, StatusCode};
@@ -41,7 +42,7 @@ use tokio_util::sync::CancellationToken;
 const UDP_BUFFER_SIZE: usize = 65536;
 const HTTP_PORT_OFFSET: u16 = 1;
 const HTTPS_PORT_OFFSET: u16 = 2;
-const MAX_MESSAGE_SIZE: usize = 1024 * 1024; // 1MB
+const MAX_MESSAGE_SIZE: usize = 1024 * 1024;
 const CHANNEL_BUFFER_SIZE: usize = 1000;
 const SYNC_INTERVAL: Duration = Duration::from_secs(60);
 const CLEANUP_INTERVAL: Duration = Duration::from_secs(300);
@@ -79,7 +80,7 @@ pub trait MeshTransport: Send + Sync {
     async fn stop(&self) -> Result<(), BellandeMeshError>;
     async fn broadcast_data(&self, data: Vec<u8>) -> Result<(), BellandeMeshError>;
     async fn get_network_stats(&self) -> Result<NetworkStats, BellandeMeshError>;
-    async fn get_all_nodes(&self) -> Result<Vec<Node>, BellandeMeshError>;
+    async fn get_nodes(&self) -> Result<Vec<Node>, BellandeMeshError>;
     async fn is_node_connected(&self, node_id: &NodeId) -> Result<bool, BellandeMeshError>;
     async fn send_data_to_node(
         &self,
@@ -437,9 +438,22 @@ impl BellandeMeshSync {
         Ok(())
     }
 
-    pub async fn get_all_nodes(&self) -> Result<Vec<Node>, BellandeMeshError> {
+    pub async fn get_nodes(&self) -> Result<Vec<Node>, BellandeMeshError> {
         let nodes = self.nodes.read().await;
         Ok(nodes.clone())
+    }
+
+    pub async fn get_node_port(&self) -> Result<u16, BellandeMeshError> {
+        let addr = self
+            .config
+            .listen_address
+            .parse::<SocketAddr>()
+            .map_err(|e| BellandeMeshError::Custom(format!("Invalid address: {}", e)))?;
+
+        // Extract the base port from the socket address
+        let port = addr.port();
+
+        Ok(port)
     }
 
     // Acquire read lock on nodes
