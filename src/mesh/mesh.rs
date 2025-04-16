@@ -59,21 +59,6 @@ pub struct NetworkStats {
     last_sync: SystemTime,
 }
 
-impl Default for NetworkStats {
-    fn default() -> Self {
-        Self {
-            tcp_connections: 0,
-            udp_packets_received: 0,
-            http_requests: 0,
-            https_requests: 0,
-            active_nodes: 0,
-            total_messages: 0,
-            start_time: SystemTime::now(),
-            last_sync: SystemTime::now(),
-        }
-    }
-}
-
 pub struct BellandeMeshSync {
     config: Arc<Config>,
     nodes: Arc<RwLock<Vec<Node>>>,
@@ -1275,6 +1260,21 @@ impl BellandeMeshSync {
     pub async fn is_node_connected(&self, node_id: &NodeId) -> Result<bool, BellandeMeshError> {
         let nodes = self.nodes.read().await;
         Ok(nodes.iter().any(|node| &node.id == node_id))
+    }
+}
+
+impl Default for NetworkStats {
+    fn default() -> Self {
+        Self {
+            tcp_connections: 0,
+            udp_packets_received: 0,
+            http_requests: 0,
+            https_requests: 0,
+            active_nodes: 0,
+            total_messages: 0,
+            start_time: SystemTime::now(),
+            last_sync: SystemTime::now(),
+        }
     }
 }
 

@@ -26,13 +26,11 @@ pub mod mesh;
 pub mod metrics;
 pub mod node;
 pub mod persistence;
-pub mod tests;
 pub mod utilities;
 
 pub use crate::config::config::Config;
 pub use crate::error::error::BellandeMeshError;
-pub use crate::mesh::mesh::BellandeMeshSync;
-pub use crate::mesh::mesh::NetworkStats;
+pub use crate::mesh::mesh::{BellandeMeshSync, NetworkStats};
 pub use crate::metrics::metrics::MetricsManager;
 pub use crate::node::node::{Node, NodeId, PublicKey};
 pub use crate::persistence::persistence::PersistenceManager;

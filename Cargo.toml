@@ -1,6 +1,6 @@
 [package]
 name = "bellande_mesh_sync"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
 authors = ["Ronaldson Bellande <ronaldsonbellande@gmail.com>"]
 description = "Advanced data synchronization system for distributed applications with algorithmic architecture"
@@ -30,7 +30,7 @@ tokio-rustls = "0.24"
 
 # Bellande Architecture
 bellande_step = "0.1.1"
-bellande_limit = "0.1.0"
+bellande_limit = "0.1.1"
 bellande_node_importance = "0.1.0"
 bellande_particle = "0.1.1"
 bellande_probability = "0.1.1"
