@@ -14,4 +14,4 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use crate::algorithm::connections::BellandeArchError;
-use bellande_step::make_bellande_node_importance_request;
+use bellande_node_importance::make_bellande_node_importance_request;
