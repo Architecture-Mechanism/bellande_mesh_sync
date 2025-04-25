@@ -31,7 +31,7 @@ tokio-rustls = "0.24"
 # Bellande Architecture
 bellande_step = "0.1.1"
 bellande_limit = "0.1.2"
-bellande_node_importance = "0.1.0"
+bellande_node_importance = "0.1.3"
 bellande_particle = "0.1.1"
 bellande_probability = "0.1.1"
 # bellande_tree = "0.1.0"

@@ -1,2 +1,2 @@
-pub mod connections;
+pub mod architecture;
 pub mod mesh;
