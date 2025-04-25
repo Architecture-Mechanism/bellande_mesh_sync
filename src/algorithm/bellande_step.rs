@@ -13,33 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use crate::algorithm::connections::BellandeArchError;
 use bellande_step::make_bellande_step_request;
 use futures::future::join_all;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::fmt;
-
-/// Error types specific to this library
-#[derive(Debug)]
-pub enum BellandeArchError {
-    DimensionMismatch(String),
-    InvalidCoordinates(String),
-    AlgorithmError(String),
-    NetworkError(String),
-}
-
-impl fmt::Display for BellandeArchError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            BellandeArchError::DimensionMismatch(msg) => write!(f, "Dimension mismatch: {}", msg),
-            BellandeArchError::InvalidCoordinates(msg) => write!(f, "Invalid coordinates: {}", msg),
-            BellandeArchError::AlgorithmError(msg) => write!(f, "Algorithm error: {}", msg),
-            BellandeArchError::NetworkError(msg) => write!(f, "Network error: {}", msg),
-        }
-    }
-}
-
-impl std::error::Error for BellandeArchError {}
 
 /// Configuration for spatial coordinate transformation
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -120,7 +98,7 @@ impl SpatialTransformer {
     }
 
     /// Process the raw Bellande Step result into our domain-specific format
-    fn process_result(result: Value) -> Result<TransformationResult, BellandeArchError> {
+    pub fn process_result(result: Value) -> Result<TransformationResult, BellandeArchError> {
         // Extract the path data from the result
         let path = result
             .get("path")
@@ -227,7 +205,7 @@ impl SpatialTransformer {
     }
 
     /// Advanced path optimization that handles obstacles
-    async fn optimize_path_with_obstacles(
+    pub async fn optimize_path_with_obstacles(
         config: SpatialTransformConfig,
         obstacles: Vec<Vec<f64>>,
     ) -> Result<TransformationResult, BellandeArchError> {

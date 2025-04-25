@@ -20,3 +20,4 @@ pub mod bellande_probability;
 pub mod bellande_segment;
 pub mod bellande_step;
 pub mod bellande_tree;
+pub mod connections;
