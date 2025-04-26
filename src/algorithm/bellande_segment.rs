@@ -14,4 +14,4 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use crate::algorithm::connections::BellandeArchError;
-use bellande_segment::make_bellande_segment_request;
+// use bellande_segment::make_bellande_segment_request;

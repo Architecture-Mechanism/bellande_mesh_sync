@@ -17,6 +17,7 @@ use crate::config::config::Config;
 use crate::data::data::DataChunk;
 use crate::encryption::encryption::PublicKey;
 use crate::error::error::BellandeMeshError;
+use crate::mesh::architecture;
 pub use crate::metrics::metrics::MetricsManager;
 use crate::node::node::{Message, Node, NodeId};
 use hyper::server::conn::AddrStream;
