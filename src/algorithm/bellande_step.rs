@@ -14,8 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use crate::algorithm::connections::{
-    euclidean_distance, is_point_valid, vector_dot_product, vector_length, vector_subtract,
-    BellandeArchError,
+    euclidean_distance, vector_dot_product, vector_length, vector_subtract, BellandeArchError,
 };
 use bellande_step::make_bellande_step_request;
 use futures::future::join_all;
