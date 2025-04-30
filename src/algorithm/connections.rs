@@ -19,6 +19,7 @@ use std::fmt;
 #[derive(Debug)]
 pub enum BellandeArchError {
     DimensionMismatch(String),
+    InvalidParameters(String),
     InvalidCoordinates(String),
     AlgorithmError(String),
     NetworkError(String),
@@ -28,6 +29,7 @@ impl fmt::Display for BellandeArchError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             BellandeArchError::DimensionMismatch(msg) => write!(f, "Dimension mismatch: {}", msg),
+            BellandeArchError::InvalidParameters(msg) => write!(f, "Invalid parameters: {}", msg),
             BellandeArchError::InvalidCoordinates(msg) => write!(f, "Invalid coordinates: {}", msg),
             BellandeArchError::AlgorithmError(msg) => write!(f, "Algorithm error: {}", msg),
             BellandeArchError::NetworkError(msg) => write!(f, "Network error: {}", msg),

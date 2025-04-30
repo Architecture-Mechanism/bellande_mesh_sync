@@ -1,5 +1,8 @@
 # Bellande Mesh Sync {BMS}
 
+## Run Bellande Mesh Sync with Bellande API
+    -  Use the Bellande Mesh Sync with the Bellande API to do efficient communication
+
 # Run Bellos Scripts
     - build_bellande_framework.bellos
     - make_rust_executable.bellos
