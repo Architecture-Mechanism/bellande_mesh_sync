@@ -1,6 +1,6 @@
 [package]
 name = "bellande_mesh_sync"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2021"
 authors = ["Ronaldson Bellande <ronaldsonbellande@gmail.com>"]
 description = "Advanced data synchronization system for distributed applications with algorithmic architecture"
